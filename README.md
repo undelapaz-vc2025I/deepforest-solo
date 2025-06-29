@@ -1,52 +1,67 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/Fs-anpaq)
-# DeepForest
+# Detección y Análisis de Árboles con DeepForest  
+**Autor: Sebastian Mindiola**
 
-Realiza la configuración del ambiente de conda siguiendo las instrucciones en:  
+Este proyecto aplica un modelo preentrenado de DeepForest para detectar árboles en imágenes aéreas, calcular métricas relevantes y realizar visualizaciones que permitan un análisis cuantitativo y visual de la vegetación.
+
+## Requisitos
+
+- Python ≥ 3.7  
+- Conda  
+- DeepForest v1.5.0  
+- Bibliotecas utilizadas: `matplotlib`, `pandas`, `numpy`, `cv2`, `skimage`
+
+Instalación recomendada mediante entorno Conda siguiendo:  
 🔗 https://deepforest.readthedocs.io/en/v1.5.0/getting_started/install.html
-
-Usa un modelo preentrenado para contar árboles siguiendo el tutorial:  
-🌲 https://deepforest.readthedocs.io/en/v1.5.0/getting_started/intro_tutorials/03_use_pretrained_model.html
-
-# Recursos
-
-- Documentación general de DeepForest: https://deepforest.readthedocs.io/en/v1.5.0/
-- Repositorio oficial: https://github.com/weecology/DeepForest
 
 ---
 
-# Tarea
+## Flujo de trabajo
 
-## Objetivo
-Aplicar un modelo preentrenado de DeepForest para detectar árboles en imágenes aéreas y realizar un análisis cuantitativo y visual a partir de los resultados obtenidos.
+### 1. Carga y predicción
 
-## Actividades
+- Se carga una imagen RGB de alta resolución.
+- Se utiliza el modelo preentrenado de DeepForest para detectar árboles.
 
-1. **Carga de imagen y predicción**
-   - Carga una imagen RGB de alta resolución.
-   - Aplica el modelo preentrenado para detectar árboles.
+### 2. Visualización
 
-2. **Visualización con identificadores**
-   - Muestra la imagen con las cajas detectadas y un identificador único para cada árbol.
+- Se muestran las cajas delimitadoras de árboles sobre la imagen original.
+- Se asigna un identificador único a cada árbol detectado.
 
-3. **Cálculo de áreas y generación de un dataframe**
-   - Calcula el área (en píxeles) de cada caja detectada.
-   - Crea un dataframe con columnas como: `id_arbol`, `xmin`, `ymin`, `xmax`, `ymax`, `area_px`.
+### 3. Cálculo de áreas
 
-4. **Cálculo de índice de vegetación**
-   - Calcula índices como:
-     - ExG = `2*G - R - B`
-     - VARI = `(G - R) / (G + R - B + ε)`
-   - Calcula la media del índice dentro de cada caja y agrega columnas al dataframe: `ExG_mean`, `VARI_mean`.
+- Se calcula el área en píxeles de cada caja delimitadora (`(xmax - xmin) * (ymax - ymin)`).
+- Se almacena en un dataframe con columnas:  
+  `id_arbol`, `xmin`, `ymin`, `xmax`, `ymax`, `area_px`.
 
-5. **Histogramas RGB**
-   - Genera histogramas para los canales R, G y B, comparando regiones detectadas como árboles vs. regiones no detectadas.
+### 4. Índices de vegetación
 
-6. **Diagramas de dispersión RGB**
-   - Calcula el promedio R, G, B de cada caja detectada y de muestras fuera de las cajas.
-   - Grafica combinaciones (R vs G, G vs B, R vs B) usando colores distintos para árboles y no árboles.
+- Se calcula para cada caja:
+  - **ExG**: `2*G - R - B`
+  - **VARI**: `(G - R) / (G + R - B + ε)`
+- Se añade al dataframe la media de cada índice: `ExG_mean`, `VARI_mean`.
 
-## Entrega esperada
+### 5. Histogramas RGB
 
-- Un notebook (recomendado: `analisis_arboles.ipynb`) que documente el flujo completo.
-- El dataframe generado en CSV.
-- Visualizaciones correspondientes (pueden estar embebidas en el notebook).
+- Se generan histogramas para los canales R, G y B:
+  - Comparación entre píxeles de árboles y fondo.
+
+### 6. Diagramas de dispersión RGB
+
+- Se calcula el promedio de R, G y B en regiones con y sin árboles.
+- Se grafican combinaciones RGB: `R vs G`, `G vs B`, `R vs B`.
+
+---
+
+## Archivos generados
+
+- `deepforest.ipynb`: Notebook con el desarrollo completo del análisis.
+- `arboles_detectados.csv`: DataFrame con información de detección y métricas.
+- Imágenes de visualización y gráficos embebidos o exportados.
+
+---
+
+## Recursos
+
+- Documentación: https://deepforest.readthedocs.io/en/v1.5.0/
+- Tutorial utilizado: https://deepforest.readthedocs.io/en/v1.5.0/getting_started/intro_tutorials/03_use_pretrained_model.html
+- Repositorio oficial: https://github.com/weecology/DeepForest
